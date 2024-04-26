@@ -41,6 +41,7 @@ class AddProduct(GenericAPIView):
     permission_classes=[IsAuthenticated]
     def post(self,request):
         data=request.data
+        data['created_at'] = timezone.now()
         categoryserializer = ProductSerializer(data=data)
         if categoryserializer.is_valid():
             categoryserializer.save()
@@ -89,6 +90,7 @@ class UpdateProduct(GenericAPIView):
     def post(self,request):
         data=request.data
         productobj=Product.objects.filter(id=data['id']).first()
+        data['updated_at'] = timezone.now()
         categoryserializer = ProductSerializer(productobj,data=data)
         if categoryserializer.is_valid():
             categoryserializer.save()
