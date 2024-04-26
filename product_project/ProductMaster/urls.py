@@ -8,4 +8,5 @@ urlpatterns = [
     path('add-product', v.AddProduct.as_view(),name="post"),
     path('update-product', v.UpdateProduct.as_view(),name="post"),
     path('delete-product', v.DeleteProduct.as_view(),name="post"),
+    path('', v.index,name="index"),
 ]

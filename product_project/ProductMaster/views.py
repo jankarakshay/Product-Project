@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .jwt1 import adminJWTAuthentication
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -160,3 +160,37 @@ class AddAdmin(GenericAPIView):
             return Response(response_,status=200)
         else:
             print("error",serializer.errors)
+
+
+import random
+import string
+from django.utils import timezone
+import celery
+from celery import shared_task
+@shared_task
+def index(request):
+    if request.method == "POST":
+        count = request.POST.get('productcount')
+        print("count",count)
+        for i in range(0,int(count)):
+            print("i",i)
+            catobj = Category.objects.filter().first()
+            category_id = catobj.id
+            title = ''.join(random.choices(string.ascii_lowercase +
+                             string.digits, k=10))
+            description = ''.join(random.choices(string.ascii_lowercase +
+                             string.digits, k=100))
+            price = random.randint(40,100) 
+            status = True
+            created_at = timezone.now()
+            Product.objects.create(category_id=category_id,title=title,description=description,price=price,status=status,created_at=created_at)
+            
+        return redirect('ProductMaster:index')
+    prodobj=Product.objects.filter()
+    prodser = ProductSerializer(prodobj,many=True)
+    return render(request,'index.html',{'productlist':prodser.data})
+
+
+
+    
+    
